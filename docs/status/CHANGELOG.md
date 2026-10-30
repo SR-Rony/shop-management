@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — Phase 02 database and API foundation (2026-10-30)
+
+- Added the initial ERP Prisma schema: categories, products, customers, suppliers, sales, sale items, payments, inventory movements and invoice sequences.
+- Added the `init_erp_foundation` migration and an idempotent development seed.
+- Added a singleton Prisma client using the `pg` driver adapter and the pooled runtime `DATABASE_URL`.
+- Added `DIRECT_URL` support for Neon migrations while keeping `DATABASE_URL` for application queries.
+- Added Decimal-safe sale creation with transactional stock decrements, insufficient-stock protection, invoice number allocation and inventory ledger entries.
+- Added JSON Route Handlers for health, products, categories, customers and sales.
+- Added Zod sale-contract tests for quantities, payment amounts and defaults.
+- Added `tsx` for the Prisma seed command.
+
 ## Unreleased — Phase 01 verification (2026-10-30)
 
 - Formatted the repository with Prettier and excluded Next.js-generated and generated Prisma artifacts.

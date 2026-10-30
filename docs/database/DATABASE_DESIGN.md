@@ -1,6 +1,6 @@
-# Database Design (planned, not implemented)
+# Database Design
 
-The real schema belongs to Phase 02 after business rules and accounting assumptions are reviewed.
+The Phase 02 foundation is implemented in `prisma/schema.prisma` and the `init_erp_foundation` migration. The candidate entities below remain the design backlog for later phases; they are not all implemented yet.
 
 ## Candidate entities
 

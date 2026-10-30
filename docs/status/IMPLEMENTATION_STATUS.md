@@ -33,9 +33,36 @@ Last verified: 2026-10-30
 | `pnpm db:validate`  | Pass                        |
 | `pnpm db:generate`  | Pass; output is git-ignored |
 
+## Phase 02 — Database & API foundation
+
+- [x] Prisma schema for categories, products, customers, suppliers, sales, sale items, payments, inventory movements and invoice sequences.
+- [x] Reviewed `init_erp_foundation` migration created and applied to the Neon development database.
+- [x] Idempotent seed script with 4 categories, 12 products, 6 customers, 3 suppliers, 6 sales, 17 sale items, 6 payments and 29 inventory movements.
+- [x] Decimal-safe sale calculation, transactional stock decrement and inventory ledger entries.
+- [x] JSON Route Handlers for health, products, categories, customers and sales.
+- [ ] Owner/accountant review and approval of the Phase 02 diff and business assumptions.
+- [ ] Authentication/authorization (Phase 03) before exposing these endpoints outside local development.
+
+### Local verification evidence
+
+| Command                                    | Result                                               |
+| ------------------------------------------ | ---------------------------------------------------- |
+| `pnpm db:validate`                         | Pass                                                 |
+| `pnpm exec prisma migrate dev`             | Pass; migration applied to Neon development database |
+| `pnpm exec prisma db seed`                 | Pass; re-run produced the same row counts            |
+| `pnpm lint`                                | Pass                                                 |
+| `pnpm typecheck`                           | Pass                                                 |
+| `pnpm test`                                | 2 files, 11 tests passed                             |
+| `pnpm exec prettier --check .`             | Pass                                                 |
+| `pnpm build`                               | Pass; six dynamic API routes                         |
+| `GET /api/health`                          | 200; database ok                                     |
+| `GET /api/products`                        | 200; 12 products                                     |
+| `GET /api/sales`                           | 200; 6 sales                                         |
+| `POST /api/sales` (valid, then cleaned up) | 201; sale, payment, stock and ledger updated         |
+
 ## ERP phases
 
-- Phase 02 Database: Planned; requires owner/accountant assumptions review.
+- Phase 02 Database: Implemented foundation; awaiting owner/accountant review.
 - Phase 03 Auth/RBAC: Planned.
 - Phase 04 Products/Inventory: Planned.
 - Phase 05 Suppliers/Purchases: Planned.

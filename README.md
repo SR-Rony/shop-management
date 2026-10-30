@@ -28,12 +28,14 @@ Dependency versions use major-version ranges in `package.json`. Review the lockf
 pnpm install
 cp .env.example .env.local
 # Edit .env.local locally. Never commit real secrets.
+pnpm exec prisma migrate dev
+pnpm exec prisma db seed
 pnpm dev
 ```
 
 Open `http://localhost:3000`.
 
-The Prisma CLI loads `.env.local` first and falls back to `.env`. A defined `DATABASE_URL` is required for Prisma CLI commands, even though schema validation and client generation do not connect to the database.
+The Prisma CLI loads `.env.local` first and falls back to `.env`. A defined `DATABASE_URL` is required for Prisma CLI commands, even though schema validation and client generation do not connect to the database. On Neon, the application uses the pooled `DATABASE_URL` while migrations use `DIRECT_URL` (the same URL with `-pooler` removed from the hostname).
 
 ## Verification
 
@@ -45,10 +47,25 @@ pnpm format:check
 pnpm build
 pnpm db:validate
 pnpm db:generate
+pnpm exec prisma db seed
 pnpm test:e2e
 ```
 
-Install the Playwright browser once on a fresh machine with `pnpm exec playwright install chromium`. Prisma generation writes to the git-ignored `src/generated/prisma` directory. No database migration is included in this foundation. Do not run migrations against a production database.
+Install the Playwright browser once on a fresh machine with `pnpm exec playwright install chromium`. Prisma generation writes to the git-ignored `src/generated/prisma` directory. Reviewed migrations live under `prisma/migrations`. Do not run migrations against a production database.
+
+## Backend API
+
+The foundation exposes JSON Route Handlers for the first ERP entities:
+
+- `GET /api/health`
+- `GET /api/products` (optional `?categoryId=`)
+- `GET /api/products/[id]`
+- `GET /api/categories`
+- `GET /api/customers`
+- `GET /api/sales` (optional `?status=` and `?limit=`)
+- `POST /api/sales`
+
+Responses use `{ "success": true, "data": ... }` or `{ "success": false, "error": "..." }`. Money values are serialized as decimal strings.
 
 ## Project rules
 
