@@ -3,6 +3,7 @@
 The real schema belongs to Phase 02 after business rules and accounting assumptions are reviewed.
 
 ## Candidate entities
+
 - Organization/Shop and future Branch (scope to confirm).
 - User, Role, Permission and role/permission assignments.
 - Product, Category, Unit and optional product identifiers.
@@ -15,6 +16,7 @@ The real schema belongs to Phase 02 after business rules and accounting assumpti
 - AuditLog and configuration.
 
 ## Design requirements
+
 - Foreign keys and appropriate unique constraints.
 - Decimal database types for amounts.
 - Explicit document states and timestamps.

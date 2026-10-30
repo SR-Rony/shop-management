@@ -1,6 +1,7 @@
 # Security Overview
 
 Security requirements for future phases:
+
 - Validate all untrusted input on the server.
 - Enforce authorization on every protected operation, not just in the UI.
 - Store secrets in environment variables/secret manager; never commit them.

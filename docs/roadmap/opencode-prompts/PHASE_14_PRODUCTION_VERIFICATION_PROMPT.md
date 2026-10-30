@@ -1,2 +1,3 @@
 # OpenCode Prompt — Phase 14 Production Verification
+
 Read `AGENTS.md`, Phase 14 spec, deployment/runbook docs and current status. Inspect code/Git status. Never deploy, migrate production, or run destructive commands without explicit approval. Prepare and verify a release checklist, backup and rollback plan, environment configuration and smoke tests. State exactly which steps were not run. Update status and stop.

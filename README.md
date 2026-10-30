@@ -18,7 +18,7 @@ Dependency versions use major-version ranges in `package.json`. Review the lockf
 
 ## Requirements
 
-- Node.js 22+
+- Node.js 22.12+
 - pnpm 10+
 - PostgreSQL for database-backed phases
 
@@ -33,6 +33,8 @@ pnpm dev
 
 Open `http://localhost:3000`.
 
+The Prisma CLI loads `.env.local` first and falls back to `.env`. A defined `DATABASE_URL` is required for Prisma CLI commands, even though schema validation and client generation do not connect to the database.
+
 ## Verification
 
 ```bash
@@ -41,11 +43,12 @@ pnpm typecheck
 pnpm test
 pnpm format:check
 pnpm build
-pnpm exec prisma validate
-pnpm exec prisma generate
+pnpm db:validate
+pnpm db:generate
+pnpm test:e2e
 ```
 
-Prisma generation/validation may require dependencies to be installed first. No database migration is included in this foundation. Do not run migrations against a production database.
+Install the Playwright browser once on a fresh machine with `pnpm exec playwright install chromium`. Prisma generation writes to the git-ignored `src/generated/prisma` directory. No database migration is included in this foundation. Do not run migrations against a production database.
 
 ## Project rules
 
@@ -61,4 +64,5 @@ Prisma generation/validation may require dependencies to be installed first. No 
 ## Roadmap
 
 See `docs/roadmap/DEVELOPMENT_ROADMAP.md`. Implement one approved phase at a time.
+
 # shop-management

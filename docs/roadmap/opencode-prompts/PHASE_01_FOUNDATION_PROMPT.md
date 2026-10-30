@@ -3,6 +3,7 @@
 Before work: read `AGENTS.md`, Phase 01 spec, architecture decisions, local development guide and current implementation status. Inspect actual code and `git status --short`.
 
 Rules:
+
 - Preserve user changes. If uncommitted changes exist, report and ask before proceeding.
 - Implement only the approved foundation scope.
 - Do not add ERP business models, auth, production deployment, or migrations.

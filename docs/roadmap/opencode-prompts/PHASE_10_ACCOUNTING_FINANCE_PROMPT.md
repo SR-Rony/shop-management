@@ -1,2 +1,3 @@
 # OpenCode Prompt — Phase 10 Accounting/Finance
+
 Read `AGENTS.md`, Phase 10 spec, accounts finance, double-entry proposal, integrity rules and current status. Inspect code/Git status and prerequisites. Confirm accountant-approved posting rules before coding. Implement only approved finance scope; all posted journals balance if double-entry is enabled. Add reconciliation tests and report any unverified accounting assumptions. Review diff/status and stop.

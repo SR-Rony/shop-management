@@ -1,6 +1,7 @@
 # Invoice Numbering
 
 Requirements:
+
 - Unique invoice identifiers; concurrent sales must not receive duplicate numbers.
 - Number allocation must be transactional.
 - Do not use a simple row count as the number generator.

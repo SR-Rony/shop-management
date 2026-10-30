@@ -1,2 +1,3 @@
 # OpenCode Prompt — Phase 03 Auth/RBAC
+
 Read `AGENTS.md`, Phase 03 spec, security docs, ADRs and current status. Inspect code and Git status first. Confirm auth decision and database prerequisites. Implement only authentication and server-side permission checks in approved scope. Test both allowed and denied access. Do not start product features. Review diff, update status/changelog/known issues, report actual verification and stop.

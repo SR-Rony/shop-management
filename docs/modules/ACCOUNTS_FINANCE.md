@@ -1,6 +1,7 @@
 # Accounts & Finance (planned)
 
 Must distinguish:
+
 - Revenue/sales documents from cash receipts.
 - Purchases from supplier payments.
 - Customer receivables from supplier payables.

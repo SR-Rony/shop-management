@@ -1,6 +1,7 @@
 # Business Requirements
 
 ## Planned modules
+
 1. Dashboard and business summaries.
 2. Product catalogue and categories.
 3. Inventory movement ledger, stock adjustments and low-stock warnings.
@@ -17,6 +18,7 @@
 14. Optional public e-commerce module, subject to separate approval.
 
 ## Non-functional requirements
+
 - Server-side authorization.
 - Decimal-safe financial calculations.
 - Transactional stock and payment operations.
@@ -26,4 +28,5 @@
 - Secure secret handling and tested backup/restore.
 
 ## Acceptance
+
 Each phase must define its own concrete acceptance criteria and verification commands before implementation.

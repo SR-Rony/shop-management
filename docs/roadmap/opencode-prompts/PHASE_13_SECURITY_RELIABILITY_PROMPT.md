@@ -1,2 +1,3 @@
 # OpenCode Prompt — Phase 13 Security/Reliability
+
 Read `AGENTS.md`, Phase 13 spec, security docs, deployment docs and current status. Inspect code/Git status. Conduct only authorized code/config review. Do not run destructive tests against real data. Review authorization, dependency risks, secrets, auditability, backup/restore and error handling; record evidence and limitations. Update docs/status and stop.
