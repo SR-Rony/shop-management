@@ -1,0 +1,11 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Phase 02 will define the approved ERP data model.
+// Do not add business models until the database design and migration plan are reviewed.

@@ -1,0 +1,2 @@
+# OpenCode Prompt — Phase 09 Returns/Refunds
+Read `AGENTS.md`, Phase 09 spec, stock/payment integrity rules and current status. Inspect code/Git status and prerequisites. Implement traceable returns linked to original transactions, approved restock and refund/credit adjustment. Do not delete or silently rewrite posted documents. Test quantity limits, stock and balance reconciliation. Review diff/status and stop.

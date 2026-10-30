@@ -1,0 +1,2 @@
+# OpenCode Prompt — Phase 08 Payments/Dues
+Read `AGENTS.md`, Phase 08 spec, accounting docs, data integrity rules and current status. Inspect code/Git status and prerequisites. Implement receipts, payment allocations and due calculations only. Support partial payments without conflating invoice total and money received. Add reconciliation tests, review diff, update status/changelog/known issues and stop.
