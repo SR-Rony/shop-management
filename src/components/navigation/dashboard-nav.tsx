@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import type { Route } from 'next';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 import {
   Package,
   Users,
@@ -14,6 +15,10 @@ import {
   Store,
   Home,
   CheckCircle2,
+  UserCog,
+  LogOut,
+  LogIn,
+  Shield,
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -23,7 +28,7 @@ interface NavigationItem {
   exact?: boolean;
 }
 
-const navigationItems: NavigationItem[] = [
+const baseNavigationItems: NavigationItem[] = [
   {
     name: 'Overview',
     href: '/',
@@ -49,7 +54,28 @@ const navigationItems: NavigationItem[] = [
 
 export function DashboardNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Client-side guard for protected dashboard layout
+  useEffect(() => {
+    if (status === 'unauthenticated' && pathname !== '/login' && pathname !== '/') {
+      router.replace(`/login?redirectTo=${encodeURIComponent(pathname)}` as Route);
+    }
+  }, [status, router, pathname]);
+
+  const navigationItems = useMemo(() => {
+    const items = [...baseNavigationItems];
+    if (session?.user?.role === 'ADMIN') {
+      items.push({
+        name: 'Users',
+        href: '/users' as Route,
+        icon: UserCog,
+      });
+    }
+    return items;
+  }, [session?.user?.role]);
 
   const isActive = (href: string, exact = false) => {
     if (exact) {
@@ -73,13 +99,15 @@ export function DashboardNav() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/sales/new"
-            className="flex items-center gap-1 rounded-lg bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-teal-800"
-          >
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span>New Sale</span>
-          </Link>
+          {session?.user && (
+            <Link
+              href="/sales/new"
+              className="flex items-center gap-1 rounded-lg bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-teal-800"
+            >
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span>New Sale</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -114,14 +142,34 @@ export function DashboardNav() {
                 </Link>
               );
             })}
-            <Link
-              href="/sales/new"
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
-            >
-              <PlusCircle className="h-4 w-4" />
-              <span>Create New Sale</span>
-            </Link>
+
+            {session?.user ? (
+              <div className="mt-3 border-t border-slate-200 pt-3 space-y-2">
+                <div className="flex items-center justify-between px-2 text-xs">
+                  <span className="font-semibold text-slate-900">{session.user.name}</span>
+                  <span className="rounded bg-teal-100 px-2 py-0.5 font-bold text-teal-800">
+                    {session.user.role}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => signOut({ callbackUrl: '/login' })}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700 transition"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+              >
+                <LogIn className="h-4 w-4" />
+                <span>Sign in</span>
+              </Link>
+            )}
           </nav>
         </div>
       )}
@@ -177,18 +225,54 @@ export function DashboardNav() {
           </nav>
         </div>
 
-        {/* System info badge */}
-        <div className="border-t border-slate-200 p-4">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-            <div className="flex items-center justify-between text-xs text-slate-600">
+        {/* User Profile / Logout footer */}
+        <div className="border-t border-slate-200 p-4 space-y-3">
+          {session?.user ? (
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-100 font-bold text-teal-800 text-xs">
+                  {(session.user.name || 'U').slice(0, 2).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-xs font-bold text-slate-900">
+                    {session.user.name || 'User'}
+                  </div>
+                  <div className="flex items-center gap-1 text-[11px] text-teal-700 font-semibold">
+                    <Shield className="h-3 w-3" />
+                    <span>{session.user.role}</span>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: '/login' })}
+                className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white py-1.5 text-xs font-semibold text-slate-700 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 transition"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Log out</span>
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition"
+            >
+              <LogIn className="h-3.5 w-3.5" />
+              <span>Sign in</span>
+            </Link>
+          )}
+
+          {/* System info badge */}
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
+            <div className="flex items-center justify-between text-slate-600">
               <span className="font-medium text-slate-700">Currency</span>
               <span className="rounded bg-teal-100 px-1.5 py-0.5 font-bold text-teal-800">BDT</span>
             </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-slate-600">
+            <div className="mt-2 flex items-center justify-between text-slate-600">
               <span className="font-medium text-slate-700">Timezone</span>
               <span className="text-slate-600">Asia/Dhaka</span>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs text-emerald-700">
+            <div className="mt-2.5 flex items-center gap-1.5 text-emerald-700">
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>System Online</span>
             </div>

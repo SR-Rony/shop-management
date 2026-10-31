@@ -1,4 +1,4 @@
-import { Role } from '@/generated/prisma/client';
+import { Role } from '@/generated/prisma/enums';
 
 const PUBLIC_API_PREFIXES = ['/api/auth', '/api/health'] as const;
 const ADMIN_API_PREFIXES = ['/api/users'] as const;

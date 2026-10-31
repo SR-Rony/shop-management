@@ -1,6 +1,16 @@
 import Link from 'next/link';
 import type { Route } from 'next';
-import { Package, Users, Receipt, PlusCircle, ArrowRight } from 'lucide-react';
+import {
+  Package,
+  Users,
+  Receipt,
+  PlusCircle,
+  ArrowRight,
+  UserCog,
+  LogIn,
+  Shield,
+} from 'lucide-react';
+import { auth } from '@/auth';
 
 interface ActiveModule {
   title: string;
@@ -10,7 +20,7 @@ interface ActiveModule {
   badge: string;
 }
 
-const activeModules: ActiveModule[] = [
+const baseActiveModules: ActiveModule[] = [
   {
     title: 'Products Catalogue',
     description: 'Browse catalogue products, inventory stock levels, SKUs, and categories.',
@@ -56,7 +66,20 @@ const plannedModules = [
   ['Users & Permissions', 'Role-based access for the owner, cashier and other staff.'],
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+
+  const activeModules = [...baseActiveModules];
+  if (session?.user?.role === 'ADMIN') {
+    activeModules.push({
+      title: 'User Management',
+      description: 'Manage staff credentials, role-based permissions, and user accounts.',
+      href: '/users' as Route,
+      icon: UserCog,
+      badge: 'Admin',
+    });
+  }
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-10 md:px-10">
       <header className="flex flex-col gap-4 border-b border-slate-200 pb-8 md:flex-row md:items-center md:justify-between">
@@ -71,7 +94,25 @@ export default function HomePage() {
             A workspace for managing retail products, stock, customers, sales and financial records.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {session?.user ? (
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs shadow-sm">
+              <span className="font-semibold text-slate-900">{session.user.name}</span>
+              <span className="inline-flex items-center gap-1 rounded bg-teal-100 px-2 py-0.5 font-bold text-teal-800">
+                <Shield className="h-3 w-3" />
+                {session.user.role}
+              </span>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition"
+            >
+              <LogIn className="h-3.5 w-3.5" />
+              <span>Sign in</span>
+            </Link>
+          )}
+
           <Link
             href="/sales/new"
             className="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-800 transition"
