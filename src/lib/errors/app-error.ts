@@ -28,3 +28,17 @@ export class ConflictError extends AppError {
     this.name = 'ConflictError';
   }
 }
+
+export class UnauthorizedError extends AppError {
+  constructor(message = 'Authentication required.') {
+    super(message, 401);
+    this.name = 'UnauthorizedError';
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = 'You do not have permission to perform this action.') {
+    super(message, 403);
+    this.name = 'ForbiddenError';
+  }
+}

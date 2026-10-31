@@ -8,6 +8,31 @@ datasource db {
 }
 
 // ---------------------------------------------------------------------------
+// Identity and access
+// ---------------------------------------------------------------------------
+
+enum Role {
+  ADMIN
+  MANAGER
+  CASHIER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  phone        String   @unique
+  passwordHash String
+  role         Role     @default(CASHIER)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  createdSales Sale[]
+
+  @@index([role])
+}
+
+// ---------------------------------------------------------------------------
 // Catalogue / inventory
 // ---------------------------------------------------------------------------
 
@@ -102,17 +127,20 @@ model Sale {
   id          String     @id @default(cuid())
   invoiceNo   String     @unique
   customerId  String
+  createdById String?
   totalAmount Decimal    @db.Decimal(14, 2)
   paidAmount  Decimal    @default(0) @db.Decimal(14, 2)
   status      SaleStatus @default(PENDING)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  customer Customer   @relation(fields: [customerId], references: [id], onDelete: Restrict)
-  items    SaleItem[]
-  payments Payment[]
+  customer  Customer  @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  createdBy User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  items     SaleItem[]
+  payments  Payment[]
 
   @@index([customerId])
+  @@index([createdById])
   @@index([status])
   @@index([createdAt])
 }

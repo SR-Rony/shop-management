@@ -299,10 +299,37 @@ const sales = [
 ];
 
 async function main() {
+  // --- Default administrator seed (Phase 03, idempotent) ---
+  // Hash password outside the transaction, then use the hash inside.
+  const bcrypt = await import('bcryptjs');
+  const SEED_ADMIN_PHONE = '+8801700000000';
+  const SEED_ADMIN_PASSWORD = 'admin1234';
+  const adminPasswordHash = await bcrypt.hash(SEED_ADMIN_PASSWORD, 12);
+
   const productById = new Map(products.map((product) => [product.id, product]));
 
   await prisma.$transaction(
     async (tx) => {
+      // Upsert the default admin user (idempotent: creates if not exists, updates if phone already present)
+      await tx.user.upsert({
+        where: { phone: SEED_ADMIN_PHONE },
+        create: {
+          id: 'seed_user_admin',
+          name: 'Shop Administrator',
+          phone: SEED_ADMIN_PHONE,
+          passwordHash: adminPasswordHash,
+          role: 'ADMIN',
+          isActive: true,
+        },
+        update: {
+          name: 'Shop Administrator',
+          phone: SEED_ADMIN_PHONE,
+          passwordHash: adminPasswordHash,
+          role: 'ADMIN',
+          isActive: true,
+        },
+      });
+
       // Rebase the seed-generated sales first. Stock may also include non-seed
       // sales, so add the previous seed quantities back instead of resetting an
       // absolute stock level. This keeps the script repeatable without deleting

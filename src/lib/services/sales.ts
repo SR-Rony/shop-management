@@ -114,7 +114,7 @@ export async function listSales(options: { status?: SaleStatus; limit?: number }
   return sales.map(serializeSale);
 }
 
-export async function createSale(input: CreateSaleInput) {
+export async function createSale(input: CreateSaleInput & { createdById?: string }) {
   const items = mergeSaleItems(input.items);
 
   return prisma.$transaction(async (tx) => {
@@ -209,6 +209,7 @@ export async function createSale(input: CreateSaleInput) {
         totalAmount: totalAmount.toFixed(2),
         paidAmount: paidAmount.toFixed(2),
         status,
+        createdById: input.createdById,
         items: {
           create: lines.map((line) => ({
             productId: line.productId,
