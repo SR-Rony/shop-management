@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { formatZodError } from '@/lib/api/response';
+import { formatZodError, handleApiError } from '@/lib/api/response';
 import { requireRole } from '@/lib/auth/authorization';
 import { createUserSchema } from '@/lib/validation/users';
 import { hashPassword } from '@/lib/auth/password';
@@ -36,11 +36,7 @@ export async function GET() {
     if (error instanceof NextResponse) {
       throw error;
     }
-    console.error('[GET /api/users] error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error.' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -109,10 +105,6 @@ export async function POST(request: NextRequest) {
     if (error instanceof NextResponse) {
       throw error;
     }
-    console.error('[POST /api/users] error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error.' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
