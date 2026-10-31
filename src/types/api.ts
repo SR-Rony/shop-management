@@ -94,3 +94,23 @@ export interface CreateSaleInput {
   customerId: string;
   items: CreateSaleItemInput[];
 }
+
+export type UserRole = 'ADMIN' | 'MANAGER' | 'CASHIER';
+
+export interface UserItem {
+  id: string;
+  name: string;
+  phone: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CreateUserPayload {
+  name: string;
+  phone: string;
+  password: string;
+  role: UserRole;
+}
+
+
